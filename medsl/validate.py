@@ -140,8 +140,9 @@ def check_county(df):
     try:
         counties = read_gazetteer('counties')
         unexpected_county_fips = set(df.query('~county_fips.isnull()').county_fips.values.astype(np.float_)) - set(
-            counties.GEOID.astype(np.float_))
-        unexpected_county_names = set(df.query('~county_name.isnull()').county_name.values) - set(counties.NAME.values)
+            counties.county_fips.astype(np.float_))
+        unexpected_county_names = set(df.query('~county_name.isnull()').county_name.values) - set(
+            counties.county_name.values)
         missing_counties = set(counties.county_name.values) - set(df.query('~county_name.isnull()').county_name.values)
         if unexpected_county_names:
             print('Unexpected county names: {}'.format(unexpected_county_names))
