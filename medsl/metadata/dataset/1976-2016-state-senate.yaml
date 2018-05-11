@@ -1,0 +1,38 @@
+dataverse: medsl_senate
+doi: doi:10.7910/DVN/PEJ5QU
+draft:
+  3072250:
+    label: 1976-2016-senate.tab
+    previousDataFileId: null
+    version: 1
+  3072492:
+    label: "codebook-us-senate-1976\u20132016.md"
+    previousDataFileId: null
+    version: 1
+  3138201:
+    label: release-notes-1976-2016-state-senate.md
+    previousDataFileId: null
+    version: 1
+  3138202:
+    label: codebook-1976-2016-state-senate.md
+    previousDataFileId: null
+    version: 1
+inherits:
+- constituency.yaml
+- 1976-2016.yaml
+- house_clerk_report.yaml
+latest-published:
+  3072250:
+    label: 1976-2016-senate.tab
+    previousDataFileId: null
+    version: 2
+  3072492:
+    label: "codebook-us-senate-1976\u20132016.md"
+    previousDataFileId: null
+    version: 2
+r_alias: senate_states_1976_2016
+title: "U.S. Senate 1976\u20132016"
+url: https://dx.doi.org/10.7910/DVN/PEJ5QU
+variable_notes:
+- name: district
+  note: Not applicable in U.S. Senate elections.

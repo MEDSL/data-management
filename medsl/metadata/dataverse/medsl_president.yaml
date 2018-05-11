@@ -1,0 +1,4 @@
+name: U.S. Presidential Elections
+identifier: medsl_president
+description: This Dataverse contains elections returns for President of the U.S.
+office: the U.S. presidency

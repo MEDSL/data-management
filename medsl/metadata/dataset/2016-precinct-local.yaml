@@ -1,0 +1,9 @@
+dataverse: medsl_local
+doi: doi:10.7910/DVN/Q8OHRS
+inherits:
+- precinct.yaml
+- 2016.yaml
+- precinct-coverage.yaml
+r_alias: local_precincts_2016
+title: Local Precinct-Level Returns 2016
+url: https://dx.doi.org/10.7910/DVN/Q8OHRS

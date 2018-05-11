@@ -1,0 +1,38 @@
+dataverse: medsl_president
+doi: doi:10.7910/DVN/42MVDX
+draft:
+  3072252:
+    label: 1976-2016-president.tab
+    previousDataFileId: null
+    version: 1
+  3072493:
+    label: codebook-us-president-1976-2016.md
+    previousDataFileId: null
+    version: 1
+  3138199:
+    label: codebook-1976-2016-state-president.md
+    previousDataFileId: null
+    version: 1
+  3138200:
+    label: release-notes-1976-2016-state-president.md
+    previousDataFileId: null
+    version: 1
+inherits:
+- constituency.yaml
+- 1976-2016.yaml
+- house_clerk_report.yaml
+latest-published:
+  3072252:
+    label: 1976-2016-president.tab
+    previousDataFileId: null
+    version: 1
+  3072493:
+    label: codebook-us-president-1976-2016.md
+    previousDataFileId: null
+    version: 2
+r_alias: presidential_states_1976_2016
+title: "U.S. President 1976\u20132016"
+url: https://dx.doi.org/10.7910/DVN/42MVDX
+variable_notes:
+- name: district
+  note: Not applicable in presidential elections.

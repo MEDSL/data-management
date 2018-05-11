@@ -1,0 +1,4 @@
+name: Local Elections
+identifier: medsl_local
+description: This Dataverse contains elections returns for local elections in the U.S.
+office: local office

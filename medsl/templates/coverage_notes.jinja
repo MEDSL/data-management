@@ -1,0 +1,23 @@
+# Coverage in {{ dataset.title }}
+
+URL: {{ dataset.url }}
+
+Version: {{ dataset.version }}
+
+| {{ "%-23s" | format('State') }} | {{ "%-10s" | format('Added') }} |
+| {{ "-" * 23 }} | {{ "-" * 10 }} |
+{% for k, v in states.items() -%}
+| {{ "%-23s" | format(k|trim) }} | {% if v.included %}{{ "%-10s" | format(v.date_added) }}{% else %}{{ ' ' * 10 }}{% endif %} |
+{% endfor -%}
+{% for k, v in states.items() %}
+
+
+## {{ k|trim }}
+
+{% if v.included %}Added {{ v.date_added|trim }}.{% else %}Not yet included.{% endif %}
+{%- if v.notes %}
+{% for note in v.notes %}
+  - {{ note|trim|wordwrap }}
+{%- endfor -%}
+{%- endif -%}
+{%- endfor -%}

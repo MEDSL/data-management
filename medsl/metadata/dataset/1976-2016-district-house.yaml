@@ -1,0 +1,35 @@
+dataverse: medsl_house
+doi: doi:10.7910/DVN/IG0UN2
+draft:
+  3059096:
+    label: 1976-2016-house.tab
+    previousDataFileId: null
+    version: 1
+  3072491:
+    label: "codebook-us-house-1976\u20132016.md"
+    previousDataFileId: null
+    version: 1
+  3138197:
+    label: release-notes-1976-2016-district-house.md
+    previousDataFileId: null
+    version: 1
+  3138198:
+    label: codebook-1976-2016-district-house.md
+    previousDataFileId: null
+    version: 1
+inherits:
+- constituency.yaml
+- 1976-2016.yaml
+- house_clerk_report.yaml
+latest-published:
+  3059096:
+    label: 1976-2016-house.tab
+    previousDataFileId: null
+    version: 2
+  3072491:
+    label: "codebook-us-house-1976\u20132016.md"
+    previousDataFileId: null
+    version: 2
+r_alias: house_districts_1976_2016
+title: "U.S. House 1976\u20132016"
+url: https://dx.doi.org/10.7910/DVN/IG0UN2

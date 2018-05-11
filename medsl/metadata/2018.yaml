@@ -1,0 +1,8 @@
+# Define the states for which we expect returns, by office, in 2018.
+
+- office: Governor
+  states: ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'FL', 'GA', 'HI', 'ID', 'IL', 'IA',
+    'KS', 'ME', 'MD', 'MA', 'MI', 'MN', 'NE', 'NV', 'NH', 'NM', 'NY', 'OH', 'OK',
+    'OR', 'PA', 'SC', 'SD', 'TN', 'TX', 'VT', 'WI', 'WY']
+
+

@@ -1,0 +1,239 @@
+# Define variables in election-return datasets.
+#
+# Some subset of these variables is included in a release: the variables
+# given in the dataset metadata key `variables`, e.g. in `precinct.yaml`.
+#
+# Each element below represents a variable in an election-return dataset.
+#
+# Fields:
+# - name: The name of the variable as it appears in a dataset (required).
+# - description: A description of the variable (required). Used in dataset
+#   codebooks.
+# - type: Data type (required).
+# - not_null: Whether null or missing values are disallowed (required).
+# - source: Source notes (optional).
+- name: year
+  description: Year of election.
+  type: integer
+  not_null: true
+
+- name: state
+  description: State name.
+  type: string
+  not_null: true
+
+- name: state_postal
+  description: State U.S. Postal Service abbreviation (two-letter ISO 1366 code).
+  type: string
+  not_null: true
+
+- name: state_fips
+  description: Numeric state FIPS 5-2 code.
+  type: integer
+  not_null: true
+
+- name: state_icpsr
+  description: Numeric ICPSR state code.
+  type: integer
+  not_null: true
+
+- name: county_name
+  description: County name.
+  source: Census Bureau [National Counties Gazetteer File](https://www.census.gov/geo/maps-data/data/gazetteer2017.html).
+  type: string
+  not_null: false
+
+- name: county_ansi
+  description: County ANSI code.
+  source: Census Bureau [National Counties Gazetteer File](https://www.census.gov/geo/maps-data/data/gazetteer2017.html).
+  type: integer
+  not_null: false
+
+- name: county_fips
+  description: Numeric FIPS 6-4 code, the concatenation of two-digit `state_fips` and three-digit county FIPS codes.
+  source: Census Bureau [National Counties Gazetteer File](https://www.census.gov/geo/maps-data/data/gazetteer2017.html).
+  type: integer
+  not_null: false
+
+- name: county_lat
+  description: County latitude (decimal degrees).
+  source: Census Bureau [National Counties Gazetteer File](https://www.census.gov/geo/maps-data/data/gazetteer2017.html).
+  type: float
+  not_null: false
+
+- name: county_long
+  description: County longitude (decimal degrees).
+  source: Census Bureau [National Counties Gazetteer File](https://www.census.gov/geo/maps-data/data/gazetteer2017.html).
+  type: float
+  not_null: false
+
+- name: jurisdiction
+  description: >
+    The name of the administrative jurisdiction, typically a county, as it appeared in source data.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: true
+
+- name: precinct
+  description: The name of the precinct, as it appeared in source data.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: true
+
+- name: office
+  description: The office for which the `candidate` ran.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: false
+
+- name: district
+  description: District associated with the `office`, where applicable.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: false
+
+- name: stage
+  type: string
+  description: >
+    The electoral stage, either `gen` for general elections or `pri` for primary
+    elections.
+  not_null: true
+
+- name: special
+  description: >
+    Whether the election was a special election, either `TRUE` for special
+    elections or `FALSE` otherwise.
+  source: Precinct returns for `jurisdiction`.
+  type: boolean
+  not_null: true
+
+- name: candidate
+  description: The name of the candidate.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: false
+
+- name: candidate_last
+  description: Candidate's last name.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_first
+  description: Candidate's first name.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_middle
+  description: Candidate's middle name.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_normalized
+  description: >
+    A normalizing transformation of the candidate's name for joins by name. This is a single word from `candidate`, usually the last name, in lowercase. In the case of hyphenated names, only the final name is included.
+  source: MEDSL.
+  type: string
+  not_null: false
+
+- name: candidate_full
+  description: Candidate's official full name.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_suffix
+  description: Candidate name suffix. 
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_nickname
+  description: Candidate's nickname.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_fec
+  description: Candidate's [FEC identifier](https://www.fec.gov/data/advanced/?tab=candidates). Multiple FEC IDs appear concatenated, separated by a semicolon and space (`; `).
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project and [FEC](https://www.fec.gov/data/advanced/?tab=candidates).
+  type: string
+  not_null: false
+
+- name: candidate_fec_name
+  description: Candidate's name as it appears in FEC data.
+  source: >
+    [FEC](https://www.fec.gov/data).
+  type: string
+  not_null: false
+
+- name: candidate_google
+  description: Candidate's [Google Knowledge Graph](https://developers.google.com/knowledge-graph) entity identifier.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_govtrack
+  description: Candidate's [GovTrack.us](https://www.govtrack.us) identifier.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_icpsr
+  description: Candidate's [ICPSR](https://www.icpsr.umich.edu) identifier.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: integer
+  not_null: false
+
+- name: candidate_maplight
+  description: Candidate's [MapLight](https://maplight.org) identifier.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_opensecrets
+  description: Candidate's [OpenSecrets.org](https://www.opensecrets.org) identifier.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_wikidata
+  description: Candidate's [WikiData](https://www.wikidata.org) identifier.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: candidate_party
+  description: Candidate's party affiliation. Values may differ from `party`, which gives the candidate's party on the ballot.
+  source: The [@unitedstates](https://github.com/unitedstates/congress-legislators) project.
+  type: string
+  not_null: false
+
+- name: writein
+  description: Whether the record describes a write-in candidate, either `TRUE` or `FALSE`.
+  source: Precinct returns for `jurisdiction`.
+  type: boolean
+  not_null: true
+
+- name: party
+  description: >
+    Party of the `candidate`, where applicable. Candidates may run on multiple party lines, so to compute two-party
+    vote shares or candidate vote totals, aggregate over `party`.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: false
+
+- name: mode
+  description: Vote mode, e.g., `mail` or `Election Day`.
+  source: Precinct returns for `jurisdiction`.
+  type: string
+  not_null: true
+
+- name: votes
+  description: Number of votes received.
+  source: Precinct returns for `jurisdiction`.
+  type: integer
+  not_null: true
+

@@ -1,0 +1,17 @@
+\docType{data}
+\name{<< dataset.r_alias  >>}
+\alias{<< dataset.r_alias >>}
+\title{<< dataset.title >>}
+\format{A \code{dataframe} with << variables|length >> variables:
+    \describe{
+    <+- for variable in variables +>
+        \item{\code{<< variable.name|trim >>}}{<< variable.description|trim|format_code >><+- if variable.note +> << variable.note|trim|format_code >><+- endif -+>}<+ endfor -+>
+}}
+\usage{<< dataset.r_alias >>}
+\source{<< dataset.url >>, version <<dataset.version>>.}
+\description{
+<< "This dataset contains {} returns for elections to {}.".format(dataset.level|trim|lower, dataverse.office|trim)|wordwrap >>
+
+<< dataset.record_definition|trim|wordwrap >> <<- dataset.notes|trim|wordwrap|format_code ->>
+}
+\keyword{datasets}

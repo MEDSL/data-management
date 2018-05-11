@@ -1,0 +1,12 @@
+# Release Notes for {{ dataset.title }}
+
+URL: {{ dataset.url }}
+
+{% for note in dataset.release_notes %}
+## {{ note.date|trim }}
+
+{{ note.note|trim|wordwrap(break_long_words=False) }}
+
+{% endfor -%}
+
+

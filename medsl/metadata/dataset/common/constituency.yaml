@@ -1,0 +1,29 @@
+level: constituency-level
+record_definition: >
+  Each record in the dataset gives the number of votes reported in a constituency for a candidate.
+variables:
+  - year
+  - state
+  - state_postal
+  - state_fips
+  - state_census
+  - state_icpsr
+  - office
+  - district
+  - stage
+  - special
+  - candidate
+  - writein
+  - party
+  - votes
+variable_notes:
+  - name: candidate
+    note: Names are as they appear in the House Clerk report.
+  - name: party
+    note: Party names are as they appear in the House Clerk report.
+  - name: votes
+    note: >
+      Massachusetts and New York returns often contains entries for "blank," "other/blank," "scattering/blank," and the
+      like. For analyses that depend on an accurate count of votes cast for candidates (rather than turnout, including
+      blank ballots), consult state returns. Future versions of this dataset will distinguish blank ballots from votes
+      cast for scattering candidates.

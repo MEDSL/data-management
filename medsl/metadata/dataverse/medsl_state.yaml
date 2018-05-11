@@ -1,0 +1,4 @@
+name: State Elections
+identifier: medsl_state
+description: This Dataverse contains elections returns for state elections in the U.S.
+office: state office

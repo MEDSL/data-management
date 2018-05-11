@@ -1,0 +1,34 @@
+# Codebook for {{ dataset.title }}
+
+URL: {{ dataset.url }}
+
+Version: {{ dataset.version }}
+
+{{ "This codebook describes a dataset on {} returns for elections to {}.".format(dataset.level|trim|lower, dataverse.office|trim)|wordwrap }}
+
+{{ dataset.record_definition|trim|wordwrap }}
+
+{%- if dataset.notes %}
+{{ dataset.notes|trim|wordwrap }}
+{% endif %}
+
+
+## Variables
+
+The dataset contains the following variables:
+{% for variable in variables %}
+- `{{ variable.name|trim }}`
+{%- endfor %}
+{% for variable in variables %}
+
+### {{ variable.name|trim }}
+
+{{ variable.description|trim|wordwrap }}
+{% if variable.note %}
+{{ variable.note|trim|wordwrap }}
+{% endif %}
+{%- if variable.source %}
+{{ "Source: {}".format(variable.source|trim|wordwrap) }}
+{% endif %}
+{%- endfor -%}
+
