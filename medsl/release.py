@@ -81,7 +81,7 @@ class PrecinctData(object):
         shutil.copy2(state_csv, dataset_csv)
         if zip:
             with ZipFile(dataset_csv.with_suffix('.zip'), 'w', ZIP_DEFLATED) as zip:
-                zip.write(dataset_csv)
+                zip.write(dataset_csv, dataset_csv.name)
 
 
 class Dataset(object):
@@ -115,9 +115,9 @@ class Dataset(object):
 
         # Zip the output files
         with ZipFile(self.csv_path.with_suffix('.zip'), 'w', ZIP_DEFLATED) as zip:
-            zip.write(self.csv_path)
-            zip.write(self.frequencies_path)
-            [zip.write(doc_path) for doc_path in self.csv_path.parent.glob('*.md')]
+            zip.write(self.csv_path, self.csv_path.name)
+            zip.write(self.frequencies_path, self.frequencies_path.name)
+            [zip.write(doc_path, doc_path.name) for doc_path in self.csv_path.parent.glob('*.md')]
 
         # Validate docs
         self.check_documentation(subset)
