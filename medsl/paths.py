@@ -18,9 +18,15 @@ def dataset_output_path(dataset_yaml_path: Path) -> Path:
     return p.resolve()
 
 
+def precinct_returns_path() -> Path:
+    """Get the path to the precinct-returns repo."""
+    p = module_path.parent.parent / 'precinct-returns'
+    return p.resolve()
+
+
 def dataset_source_path() -> Path:
     """Get the path to the directory for dataset source files."""
-    p = module_path.parent.parent / 'precinct-returns' / 'source'
+    p = precinct_returns_path() / 'source'
     return p.resolve()
 
 

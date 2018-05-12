@@ -1,0 +1,46 @@
+# Precinct-Level Election Returns
+
+This is the MEDSL repository for precinct-level election returns. We periodically publish its contents to our [Dataverse](https://dataverse.harvard.edu/dataverse/medsl_election_returns) and [website](https://electionlab.mit.edu/data).
+
+The `2016-precinct-*` directories contain data and documentation for Dataverse datasets. Returns by state are in the `source` directory.
+
+
+# Coverage
+
+| {{ "%-23s" | format('State') }} | {{ "%-10s" | format('Added') }} |
+| {{ "-" * 23 }} | {{ "-" * 10 }} |
+{% for k, v in states.items() -%}
+| {{ "%-23s" | format(k|trim) }} | {% if v.included %}{{ "%-10s" | format(v.date_added) }}{% else %}{{ ' ' * 10 }}{% endif %} |
+{% endfor -%}
+{% for k, v in states.items() %}
+
+
+## {{ k|trim }}
+
+{% if v.included %}Added {{ v.date_added|trim }}.{% else %}Not yet included.{% endif %}
+{%- if v.notes %}
+{% for note in v.notes %}
+  - {{ note|trim|wordwrap }}
+{%- endfor -%}
+{%- endif -%}
+{%- endfor %}
+
+
+# Codebook
+
+Datasets contain the following variables:
+{% for variable in variables %}
+- `{{ variable.name|trim }}`
+{%- endfor %}
+{% for variable in variables %}
+
+### {{ variable.name|trim }}
+
+{{ variable.description|trim|wordwrap }}
+{% if variable.note %}
+{{ variable.note|trim|wordwrap }}
+{% endif %}
+{%- if variable.source %}
+{{ "Source: {}".format(variable.source|trim|wordwrap) }}
+{% endif %}
+{%- endfor -%}

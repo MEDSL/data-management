@@ -84,6 +84,22 @@ def write_docs(dataset: Path) -> (str, str):
     return codebook, notes
 
 
+def write_readme() -> None:
+    """Generate the readme for the precinct-returns repo."""
+    template_loader = FileSystemLoader(searchpath=str(module_path / 'templates'))
+    env = Environment(loader=template_loader)
+    readme_template = env.get_template('precinct_readme.jinja')
+    # Read variable metadata for the codebook. It doesn't matter which dataset we specify here; variables are the
+    # same across the precinct datasets.
+    dataset_meta = read_dataset_meta(Path('2016-precinct-house.yaml'), quietly=True)
+    variable_meta = read_variable_meta(dataset_meta, quietly=True)
+    # Read the coverage notes for precinct datasets
+    coverage = yaml.load(dataset_meta_yaml_path('common/precinct-coverage.yaml').read_text())
+    readme = readme_template.render(variables=variable_meta, states=coverage['coverage'])
+    (precinct_returns_path() / 'README.md').write_text(readme)
+    logging.info('Wrote precinct-returns readme to {}'.format(precinct_returns_path()))
+
+
 def write_frequencies(df: pd.DataFrame, destination: str = '') -> pd.DataFrame:
     """Create a variable-value frequency table, optionally writing it to disk.
     """

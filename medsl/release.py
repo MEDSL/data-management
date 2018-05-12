@@ -14,7 +14,7 @@ import pyarrow
 import yaml
 
 from medsl import PRECINCT_COLS, DATAVERSE_SHORT_NAMES
-from medsl.docs import write_docs, write_frequencies
+from medsl.docs import write_docs, write_frequencies, write_readme
 from medsl.metadata import read_dataset_meta, read_variable_meta
 from medsl.paths import dataset_csv_path, state_csv_path, dataset_meta_yaml_path, dataset_source_path, module_path, \
     dataset_output_path
@@ -22,8 +22,23 @@ from medsl.rdas import file_to_rda
 
 
 class PrecinctData(object):
+    """A data class for precinct-level election returns.
 
-    def __init__(self, state_postals=[]):
+    This class reads normalized precinct returns for a set of states from the disk, and combines them into a single
+    DataFrame. By default states marked as ready for release (included=True) in `precinct-coverage.yaml` are
+    included. The result is available via the `precinct_returns` attribute. Our published datasets are subsets (
+    proper and overlapping) of this DataFrame. The Dataset class takes PrecinctData as input and is responsible for
+    taking a subset and writing it to disk with documentation.
+
+    Calling the `copy_state_csvs` method populates the `precinct-returns/source` directory with the state CSVs (
+    copied from the state directories and zipped for GitHub).
+    """
+
+    def __init__(self, state_postals=None):
+        """
+        :param state_postals: Postal abbreviations for states to include. By default, states with included=True in
+        `precinct-coverage.yaml` will be included.
+        """
         self.coverage = yaml.load(dataset_meta_yaml_path('common/precinct-coverage.yaml').read_text())
         state_ids = pd.read_csv(module_path / 'gazetteers' / 'states.csv')
         if state_postals:
@@ -39,7 +54,8 @@ class PrecinctData(object):
         self.precinct_returns = self.read_precincts()
 
     def copy_state_csvs(self):
-        # Also copy the state CSVs to a `sources` subdirectory of the output directory
+        """Copy the state CSVs to a `sources` subdirectory of the output directory.
+        """
         for state_postal in self.state_postals:
             self.copy_precinct_csv(state_postal)
 
@@ -75,7 +91,8 @@ class PrecinctData(object):
 
     @staticmethod
     def copy_precinct_csv(state_abbr: str, zip=True) -> None:
-        """Copy final CSVs from state directories into precinct-returns/source directory."""
+        """Copy final CSVs from state directories into precinct-returns/source directory.
+        """
         state_csv = state_csv_path(state_abbr)
         dataset_csv = dataset_source_path() / state_csv.name
         shutil.copy2(state_csv, dataset_csv)
@@ -85,32 +102,45 @@ class PrecinctData(object):
 
 
 class Dataset(object):
+    """A class for precinct return datasets.
+
+    The DataFrame holding the data is in the `table` attribute. The `release` method writes the dataset and its
+    documentation to disk.
+    """
 
     def __init__(self, precinct_data: PrecinctData, dataverse: str):
-        self.precinct_data = precinct_data
+        """Subset PrecinctData, resolve output paths, and read dataset metadata.
+
+        :param precinct_data: PrecinctData for one or more states.
+        :param dataverse: The short name for a dataverse: 'president', 'senate', 'house', 'state', or 'local'.
+        """
         self.dataverse = dataverse
+        # Subset from all the precinct data to rows assigned to the dataverse, or included in all dataverses
+        subset = precinct_data.precinct_returns.loc[
+            precinct_data.precinct_returns['dataverse'].isin([self.dataverse, 'all'])]
+        # Don't include the dataverse column, used only for this subsetting, in the release data
+        del subset['dataverse']
+        self.table = subset
+        # Resolve output paths
         self.yaml_file = Path('2016-precinct-{}.yaml'.format(self.dataverse))
         self.output_path = dataset_output_path(self.yaml_file)
         self.csv_path = dataset_csv_path(self.yaml_file)
         self.feather_path = self.csv_path.with_suffix('.feather')
         self.rda_path = self.csv_path.with_suffix('.rda')
         self.frequencies_path = self.output_path / 'frequencies-{}.csv'.format(self.csv_path.stem)
+        # Read dataset metadata
         self.metadata = read_dataset_meta(self.yaml_file, quietly=True)
         self.variable_meta = read_variable_meta(self.metadata)
-        if not self.csv_path.parent.exists():
-            self.csv_path.parent.mkdir()
 
     def release(self) -> None:
-        # Subset from all the precinct data to rows assigned to the dataverse, or included in all dataverses
-        subset = self.precinct_data.precinct_returns.loc[
-            self.precinct_data.precinct_returns['dataverse'].isin([self.dataverse, 'all'])]
-        # Don't include the dataverse column, used only for this subsetting, in the release data
-        del subset['dataverse']
-
+        """Write a dataset and its documentation to disk.
+        """
         # Write release files to output directory
-        subset.to_csv(self.csv_path, index=False)
-        self.write_feather(subset)
-        write_frequencies(subset, str(self.frequencies_path))
+        if not self.csv_path.parent.exists():
+            self.csv_path.parent.mkdir()
+        self.table.to_csv(self.csv_path, index=False)
+        self.write_feather(self.table)
+        write_frequencies(self.table, str(self.frequencies_path))
         write_docs(self.yaml_file)
 
         # Zip the output files
@@ -120,7 +150,7 @@ class Dataset(object):
             [zip.write(doc_path, doc_path.name) for doc_path in self.csv_path.parent.glob('*.md')]
 
         # Validate docs
-        self.check_documentation(subset)
+        self.check_documentation(self.table)
 
     def write_feather(self, subset: pd.DataFrame) -> None:
         try:
@@ -136,7 +166,8 @@ class Dataset(object):
             self.find_mixed_type_columns(subset)
 
     def find_mixed_type_columns(self, subset):
-        """Find columns that can't be written as feather."""
+        """Find columns that can't be written as feather.
+        """
         mixed_cols = []
         for col in subset.columns:
             try:
@@ -148,7 +179,8 @@ class Dataset(object):
             return mixed_cols
 
     def check_documentation(self, subset: pd.DataFrame) -> None:
-        """Assert that all variables in data are documented, and no others."""
+        """Assert that all variables in data are documented, and no others.
+        """
         subset_cols = set(subset.columns.values)
         doc_cols = {col['name'] for col in self.variable_meta}
         not_in_docs = subset_cols - doc_cols
@@ -164,6 +196,8 @@ class Dataset(object):
 
 if __name__ == '__main__':
     precinct_data = PrecinctData()
+    precinct_data.copy_state_csvs()
+    write_readme()
     for dataverse in DATAVERSE_SHORT_NAMES:
         dataset = Dataset(precinct_data, dataverse)
         dataset.release()
