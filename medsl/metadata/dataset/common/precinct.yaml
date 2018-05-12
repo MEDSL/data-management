@@ -1,6 +1,5 @@
 level: precinct-level
 record_definition: Each record in the dataset gives the number of votes reported from a precinct for a candidate.
-version: 2018-04-23
 
 states: ['AK', 'AL', 'CA', 'CO', 'CT', 'DC', 'GA', 'HI', 'IA', 'ID', 'IL', 'KS',
   'KY', 'LA', 'MA', 'MI', 'MN', 'NC', 'ND', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR',

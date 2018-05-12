@@ -8,16 +8,19 @@ metadata (see './metadata').
 
 Can be run as a script, but also used by release.py.
 """
+import datetime
 import logging
 import re
 from pathlib import Path
 
 import pandas as pd
 import plac
+import yaml
 from jinja2 import Environment, FileSystemLoader
 
 from medsl.metadata import read_dataset_meta, read_variable_meta, read_dataverse_meta
-from medsl.paths import dataset_output_path, precinct_yaml_paths, module_path, r_output_path
+from medsl.paths import dataset_output_path, precinct_yaml_paths, module_path, r_output_path, dataset_meta_yaml_path, \
+    precinct_returns_path
 
 
 class Documentation(object):
@@ -48,6 +51,8 @@ def write_docs(dataset: Path) -> (str, str):
 
     # Load metadata for the dataset the codebook describes
     dataset_meta = read_dataset_meta(dataset, quietly=True)
+    # Use today's date for version id
+    dataset_meta['version'] = str(datetime.datetime.today().date())
 
     # Load metadata for the dataverse of the dataset
     dataverse_meta = read_dataverse_meta(dataset_meta['dataverse'])
