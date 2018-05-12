@@ -14,90 +14,87 @@ import re
 from pathlib import Path
 
 import pandas as pd
-import plac
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
+from medsl import DATAVERSE_SHORT_NAMES
 from medsl.metadata import read_dataset_meta, read_variable_meta, read_dataverse_meta
-from medsl.paths import dataset_output_path, precinct_yaml_paths, module_path, r_output_path, dataset_meta_yaml_path, \
+from medsl.paths import dataset_output_path, module_path, r_output_path, dataset_meta_yaml_path, \
     precinct_returns_path
 
 
 class Documentation(object):
-    pass
-
-
-def write_docs(dataset: Path) -> (str, str):
-    """Create documentation files for a dataset.
-
-    As a side effect, writes dataset codebook, release notes, and R documentation to dataset_output_path().
-
-    :param dataset: The Path of a YAML filename in metadata/dataset, e.g. '2016-precinct-senate.yaml'.
-    :return A 2-tuple of (codebook, release notes) text.
+    """A class for dataset documentation.
     """
-    template_loader = FileSystemLoader(searchpath=str(module_path / 'templates'))
-    env = Environment(loader=template_loader)
-    # The Rd template avoids using braces as delimiters
-    rd_env = Environment(loader=template_loader, block_start_string='<+', block_end_string='+>',
-                         variable_start_string='<<', variable_end_string='>>', comment_start_string='<#',
-                         comment_end_string='>#')
-    rd_env.filters['r_alias'] = r_alias
-    rd_env.filters['format_code'] = format_code
 
-    codebook_template = env.get_template('codebook.jinja')
-    notes_template = env.get_template('release_notes.jinja')
-    coverage_template = env.get_template('coverage_notes.jinja')
-    rdata_template = rd_env.get_template('r_doc.jinja')
+    def __init__(self):
+        template_loader = FileSystemLoader(searchpath=str(module_path / 'templates'))
+        self.env = Environment(loader=template_loader)
+        # The Rd template avoids using braces as delimiters
+        self.rd_env = Environment(loader=template_loader, block_start_string='<+', block_end_string='+>',
+                                  variable_start_string='<<', variable_end_string='>>', comment_start_string='<#',
+                                  comment_end_string='>#')
+        # Add custom filters
+        self.rd_env.filters['r_alias'] = r_alias
+        self.rd_env.filters['format_code'] = format_code
+        self.codebook_template = self.env.get_template('codebook.jinja')
+        self.notes_template = self.env.get_template('release_notes.jinja')
+        self.coverage_template = self.env.get_template('coverage_notes.jinja')
+        self.rdata_template = self.rd_env.get_template('r_doc.jinja')
 
-    # Load metadata for the dataset the codebook describes
-    dataset_meta = read_dataset_meta(dataset, quietly=True)
-    # Use today's date for version id
-    dataset_meta['version'] = str(datetime.datetime.today().date())
+    def write(self, dataverse: str) -> None:
+        """Write documentation to disk.
 
-    # Load metadata for the dataverse of the dataset
-    dataverse_meta = read_dataverse_meta(dataset_meta['dataverse'])
-    logging.debug('Read dataverse metadata: {}'.format(dataset_meta['dataverse']))
+        Writes dataset codebook, release notes, and R documentation to dataset_output_path().
 
-    # Load metadata for the variables in the dataset
-    variable_meta = read_variable_meta(dataset_meta, quietly=True)
-    del dataset_meta['variables']
+        :param dataverse: The short name for a dataverse: 'president', 'senate', 'house', 'state', or 'local'.
+        """
+        # Load metadata for the dataset the codebook describes
+        dataset_yaml = Path('2016-precinct-{}.yaml'.format(dataverse))
+        dataset_meta = read_dataset_meta(dataset_yaml, quietly=True)
+        # Use today's date for version id
+        dataset_meta['version'] = str(datetime.datetime.today().date())
 
-    # Populate templates
-    codebook = codebook_template.render(dataset=dataset_meta, dataverse=dataverse_meta, variables=variable_meta)
-    notes = notes_template.render(dataset=dataset_meta)
-    rdata_rd = rdata_template.render(dataset=dataset_meta, dataverse=dataverse_meta, variables=variable_meta)
-    coverage = coverage_template.render(dataset=dataset_meta, states=dataset_meta['coverage'])
+        # Load metadata for the dataverse of the dataset
+        dataverse_meta = read_dataverse_meta(dataset_meta['dataverse'])
+        logging.debug('Read dataverse metadata: {}'.format(dataset_meta['dataverse']))
 
-    # Destination directory is the name of the dataset YAML, less the .yaml extension,
-    # e.g. '2016-precinct-president', under the path returned by dataset_output_path().
-    output_dir = dataset_output_path(dataset)
-    r_package_dir = r_output_path()
+        # Load metadata for the variables in the dataset
+        variable_meta = read_variable_meta(dataset_meta, quietly=True)
+        del dataset_meta['variables']
 
-    # Write documentation to disk
-    dataset_name = Path(dataset).stem
-    (output_dir / 'codebook-{}.md'.format(dataset_name)).write_text(codebook)
-    (output_dir / 'release-notes-{}.md'.format(dataset_name)).write_text(notes)
-    (output_dir / 'coverage-notes-{}.md'.format(dataset_name)).write_text(coverage)
-    (r_package_dir / '{}.Rd'.format(dataset_meta['r_alias'])).write_text(rdata_rd)
-    print('Wrote docs to {} and {}'.format(output_dir, r_package_dir))
+        # Populate templates
+        codebook = self.codebook_template.render(dataset=dataset_meta, dataverse=dataverse_meta,
+                                                 variables=variable_meta)
+        notes = self.notes_template.render(dataset=dataset_meta)
+        rdata_rd = self.rdata_template.render(dataset=dataset_meta, dataverse=dataverse_meta, variables=variable_meta)
+        coverage = self.coverage_template.render(dataset=dataset_meta, states=dataset_meta['coverage'])
 
-    return codebook, notes
+        # Destination directory is the name of the dataset YAML, less the .yaml extension,
+        # e.g. '2016-precinct-president', under the path returned by dataset_output_path().
+        output_dir = dataset_output_path(dataset_yaml)
+        r_package_dir = r_output_path()
 
+        # Write documentation to disk
+        dataset_name = Path(dataset_yaml).stem
+        (output_dir / 'codebook-{}.md'.format(dataset_name)).write_text(codebook)
+        (output_dir / 'release-notes-{}.md'.format(dataset_name)).write_text(notes)
+        (output_dir / 'coverage-notes-{}.md'.format(dataset_name)).write_text(coverage)
+        (r_package_dir / '{}.Rd'.format(dataset_meta['r_alias'])).write_text(rdata_rd)
+        logging.info('Wrote docs to {} and {}'.format(output_dir, r_package_dir))
 
-def write_readme() -> None:
-    """Generate the readme for the precinct-returns repo."""
-    template_loader = FileSystemLoader(searchpath=str(module_path / 'templates'))
-    env = Environment(loader=template_loader)
-    readme_template = env.get_template('precinct_readme.jinja')
-    # Read variable metadata for the codebook. It doesn't matter which dataset we specify here; variables are the
-    # same across the precinct datasets.
-    dataset_meta = read_dataset_meta(Path('2016-precinct-house.yaml'), quietly=True)
-    variable_meta = read_variable_meta(dataset_meta, quietly=True)
-    # Read the coverage notes for precinct datasets
-    coverage = yaml.load(dataset_meta_yaml_path('common/precinct-coverage.yaml').read_text())
-    readme = readme_template.render(variables=variable_meta, states=coverage['coverage'])
-    (precinct_returns_path() / 'README.md').write_text(readme)
-    logging.info('Wrote precinct-returns readme to {}'.format(precinct_returns_path()))
+    def write_readme(self):
+        """Generate the readme for the precinct-returns repo."""
+        readme_template = self.env.get_template('precinct_readme.jinja')
+        # Read variable metadata for the codebook. It doesn't matter which dataset we specify here; variables are the
+        # same across the precinct datasets.
+        dataset_meta = read_dataset_meta(Path('2016-precinct-house.yaml'), quietly=True)
+        variable_meta = read_variable_meta(dataset_meta, quietly=True)
+        # Read the coverage notes for precinct datasets
+        coverage = yaml.load(dataset_meta_yaml_path('common/precinct-coverage.yaml').read_text())
+        readme = readme_template.render(variables=variable_meta, states=coverage['coverage'])
+        (precinct_returns_path() / 'README.md').write_text(readme)
+        logging.info('Wrote precinct-returns readme to {}'.format(precinct_returns_path()))
 
 
 def write_frequencies(df: pd.DataFrame, destination: str = '') -> pd.DataFrame:
@@ -143,14 +140,7 @@ def format_code(text: str) -> str:
         return ''
 
 
-def main():
-    """Write dataset documentation.
-    """
-    # write_docs(Path('2016-precinct-house.yaml'))
-    for yaml_path in precinct_yaml_paths():
-        write_docs(yaml_path)
-
-
 if __name__ == '__main__':
-    # plac.call(write_docs, arglist=[Path('2016-precinct-house.yaml')])
-    plac.call(main)
+    docs = Documentation()
+    for dataverse in DATAVERSE_SHORT_NAMES:
+        docs.write(dataverse)

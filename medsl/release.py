@@ -14,7 +14,7 @@ import pyarrow
 import yaml
 
 from medsl import PRECINCT_COLS, DATAVERSE_SHORT_NAMES
-from medsl.docs import write_docs, write_frequencies, write_readme
+from medsl.docs import Documentation, write_frequencies
 from medsl.metadata import read_dataset_meta, read_variable_meta
 from medsl.paths import dataset_csv_path, state_csv_path, dataset_meta_yaml_path, dataset_source_path, module_path, \
     dataset_output_path
@@ -141,7 +141,7 @@ class Dataset(object):
         self.table.to_csv(self.csv_path, index=False)
         self.write_feather(self.table)
         write_frequencies(self.table, str(self.frequencies_path))
-        write_docs(self.yaml_file)
+        Documentation().write(self.dataverse)
 
         # Zip the output files
         with ZipFile(self.csv_path.with_suffix('.zip'), 'w', ZIP_DEFLATED) as zip:
@@ -197,7 +197,7 @@ class Dataset(object):
 if __name__ == '__main__':
     precinct_data = PrecinctData()
     precinct_data.copy_state_csvs()
-    write_readme()
+    Documentation().write_readme()
     for dataverse in DATAVERSE_SHORT_NAMES:
         dataset = Dataset(precinct_data, dataverse)
         dataset.release()
