@@ -3,7 +3,6 @@ doi: doi:10.7910/DVN/PSKDUJ
 inherits:
 - precinct.yaml
 - 2016.yaml
-- precinct-coverage.yaml
 r_alias: house_precincts_2016
 title: U.S. House of Representatives Precinct-Level Returns 2016
 url: http://dx.doi.org/10.7910/DVN/PSKDUJ

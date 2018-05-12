@@ -3,7 +3,6 @@ doi: doi:10.7910/DVN/GSZG1O
 inherits:
 - precinct.yaml
 - 2016.yaml
-- precinct-coverage.yaml
 r_alias: state_precincts_2016
 title: State Precinct-Level Returns 2016
 url: http://dx.doi.org/10.7910/DVN/GSZG1O

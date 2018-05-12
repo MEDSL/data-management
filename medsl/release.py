@@ -15,9 +15,9 @@ import yaml
 
 from medsl import PRECINCT_COLS, DATAVERSE_SHORT_NAMES
 from medsl.docs import Documentation, write_frequencies
-from medsl.metadata import read_dataset_meta, read_variable_meta
-from medsl.paths import dataset_csv_path, state_csv_path, dataset_meta_yaml_path, dataset_source_path, module_path, \
-    dataset_output_path
+from medsl.metadata import Metadata
+from medsl.paths import dataset_csv_path, state_csv_path, dataset_meta_yaml_path, precinct_returns_source_dir, \
+    module_path, dataset_output_path
 from medsl.rdas import file_to_rda
 
 
@@ -48,7 +48,7 @@ class PrecinctData(object):
             self.state_names = list(state_ids.loc[state_ids.state_postal.isin(state_ids), 'state'].values)
         else:
             # Include states with included=True in `precinct-coverage.yaml`
-            self.state_names = [k for k, v in self.coverage['coverage'].items() if v['included']]
+            self.state_names = [k for k, v in self.coverage.items() if v['included']]
             # Walk from state names to state postal abbreviations for use in paths
             self.state_postals = list(state_ids.loc[state_ids.state.isin(self.state_names), 'state_postal'].values)
         self.precinct_returns = self.read_precincts()
@@ -94,7 +94,7 @@ class PrecinctData(object):
         """Copy final CSVs from state directories into precinct-returns/source directory.
         """
         state_csv = state_csv_path(state_abbr)
-        dataset_csv = dataset_source_path() / state_csv.name
+        dataset_csv = precinct_returns_source_dir / state_csv.name
         shutil.copy2(state_csv, dataset_csv)
         if zip:
             with ZipFile(dataset_csv.with_suffix('.zip'), 'w', ZIP_DEFLATED) as zip:
@@ -128,9 +128,8 @@ class Dataset(object):
         self.feather_path = self.csv_path.with_suffix('.feather')
         self.rda_path = self.csv_path.with_suffix('.rda')
         self.frequencies_path = self.output_path / 'frequencies-{}.csv'.format(self.csv_path.stem)
-        # Read dataset metadata
-        self.metadata = read_dataset_meta(self.yaml_file, quietly=True)
-        self.variable_meta = read_variable_meta(self.metadata)
+        # Read associated metadata
+        self.metadata = Metadata(dataverse)
 
     def release(self) -> None:
         """Write a dataset and its documentation to disk.
@@ -158,7 +157,7 @@ class Dataset(object):
             subset.reset_index(inplace=True, drop=True)
             feather.write_dataframe(subset, self.feather_path)
             # Write rda from feather
-            file_to_rda(self.feather_path, self.rda_path, self.metadata['r_alias'], 'feather_to_rda.R')
+            file_to_rda(self.feather_path, self.rda_path, self.metadata.dataset_meta['r_alias'], 'feather_to_rda.R')
             logging.info('Wrote data to {}'.format(self.feather_path.parent))
         except pyarrow.lib.ArrowInvalid:
             logging.error('Error writing {} subset as feather:'.format(self.dataverse))
@@ -182,14 +181,14 @@ class Dataset(object):
         """Assert that all variables in data are documented, and no others.
         """
         subset_cols = set(subset.columns.values)
-        doc_cols = {col['name'] for col in self.variable_meta}
+        doc_cols = {col['name'] for col in self.metadata.variable_meta}
         not_in_docs = subset_cols - doc_cols
         not_in_data = doc_cols - subset_cols
         msg = ''
         if not_in_docs:
-            msg += 'Undocumented variables in {}: {}. '.format(self.metadata['dataverse'], not_in_docs)
+            msg += 'Undocumented variables in {}: {}. '.format(self.metadata.dataverse, not_in_docs)
         if not_in_data:
-            msg += 'Documented variables missing from {}: {}.'.format(self.metadata['dataverse'], not_in_docs)
+            msg += 'Documented variables missing from {}: {}.'.format(self.metadata.dataverse, not_in_docs)
         if msg:
             raise ValueError(msg)
 

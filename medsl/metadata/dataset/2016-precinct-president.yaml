@@ -3,7 +3,6 @@ doi: doi:10.7910/DVN/LYWX3D
 inherits:
 - precinct.yaml
 - 2016.yaml
-- precinct-coverage.yaml
 r_alias: presidential_precincts_2016
 title: U.S. President Precinct-Level Returns 2016
 url: http://dx.doi.org/10.7910/DVN/LYWX3D

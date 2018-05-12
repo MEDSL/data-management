@@ -5,7 +5,7 @@ Provide Open Elections returns for validation. WIP; not yet in use.
 
 import pandas as pd
 
-from medsl.paths import openelections_path
+from medsl.paths import openelections_dir
 
 
 def read_oe_precincts(path, usecols=['county', 'precinct', 'office', 'district', 'candidate', 'party', 'votes']):
@@ -63,6 +63,5 @@ def tally_by_candidate_office(df):
 
 
 if __name__ == '__main__':
-    oe_dir = openelections_path()
-    df = read_oe_dir(oe_dir / 'openelections-data-ny' / '2016')
+    df = read_oe_dir(openelections_dir / 'openelections-data-ny' / '2016')
     tally_by_candidate_office(df)

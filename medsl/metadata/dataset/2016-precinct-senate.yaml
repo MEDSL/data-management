@@ -3,7 +3,6 @@ doi: doi:10.7910/DVN/NLTQAD
 inherits:
 - precinct.yaml
 - 2016.yaml
-- precinct-coverage.yaml
 r_alias: senate_precincts_2016
 title: U.S. Senate Precinct-Level Returns 2016
 url: http://dx.doi.org/10.7910/DVN/NLTQAD

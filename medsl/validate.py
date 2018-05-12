@@ -19,7 +19,7 @@ import yaml
 
 from medsl import US_SENATE_RACES
 from medsl.docs import write_frequencies
-from medsl.metadata import read_dataset_meta, read_variable_meta
+from medsl.metadata import Metadata
 from medsl.paths import module_path
 from medsl.release import PrecinctData
 
@@ -32,10 +32,11 @@ def check_final(state_postal='CA', values=False) -> None:
     print('Checking {}...'.format(state_postal))
     precinct_data = PrecinctData([state_postal])
     df = precinct_data.precinct_returns
-    dataset_meta = read_dataset_meta('common/precinct.yaml')
-    variable_meta = read_variable_meta(dataset_meta)
+    # Doesn't matter which dataverse we specify here; we need the variable metadata, which is the same across
+    # dataverses
+    metadata = Metadata('house')
 
-    report_missing_columns(df, variable_meta)
+    report_missing_columns(df, metadata.variable_meta)
     report_suspect_values(df)
     report_duplicates(df)
     report_constituency_totals(df)
