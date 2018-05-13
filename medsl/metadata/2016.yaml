@@ -1,18 +1,14 @@
 # Define the states for which we expect returns, by office, in 2016.
 
-- office: US Senate
-  states: ['AK', 'AR', 'CO', 'FL', 'GA', 'IL', 'IN', 'IA', 'KY', 'LA', 'MO', 'NV', 'NH', 'NC', 'OH', 'PA', 'WI']
+US Senate: ['AK', 'AR', 'CO', 'FL', 'GA', 'IL', 'IN', 'IA', 'KY', 'LA', 'MO', 'NV', 'NH', 'NC', 'OH', 'PA', 'WI']
 
-- office: State House
-  states: ['AK', 'AZ', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'ME', 'MA', 'MI', 'MN',
-    'MO', 'MT', 'NV', 'NH', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT',
-    'WA', 'WV', 'WI', 'WY']
+State House: ['AK', 'AZ', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'ME', 'MA',
+    'MI', 'MN', 'MO', 'MT', 'NV', 'NH', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
+    'UT', 'VT', 'WA', 'WV', 'WI', 'WY']
 
-- office: State Senate
-  states: ['AK', 'AZ', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'ME', 'MA', 'MN', 'MO',
-    'MT', 'NE', 'NV', 'NH', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT',
-    'WA', 'WV', 'WI', 'WY']
+State Senate: ['AK', 'AZ', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'ME', 'MA',
+    'MN', 'MO', 'MT', 'NE', 'NV', 'NH', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
+    'UT', 'VT', 'WA', 'WV', 'WI', 'WY']
 
-- office: Governor
-  states: ['DE', 'IN', 'MO', 'MT', 'NH', 'NC', 'ND', 'OR', 'UT', 'VT', 'WA', 'WV']
+Governor: ['DE', 'IN', 'MO', 'MT', 'NH', 'NC', 'ND', 'OR', 'UT', 'VT', 'WA', 'WV']
 
