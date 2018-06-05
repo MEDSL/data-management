@@ -106,13 +106,11 @@ Illinois:
       source data.
 
 Indiana:
-  included: false
-  date_added: TK
+  included: true
+  date_added: 2018-06-05
   notes:
-    - >
-      There are inconsistencies in `candidate` spellings following OCR. Values in the `votes`
-      column may also be affected.
-    - Vote counts are too high, compared to county-level returns.
+    - Candidate names for lower office are not always consistent across counties.
+    - The data don't yet include write-in votes for president, with the exception of returns from La Porte and Marshall.
 
 Iowa:
   included: true
@@ -139,13 +137,8 @@ Maine:
     - County identifiers aren't yet available for all jurisdictions.
 
 Maryland:
-  included: false
-  date_added: 2018-05-09
-  notes:
-    - >
-      In the current release, only election-day votes are included. Other
-      vote modes are reported at the county level, and we need to append them
-      to the precinct-level returns.
+  included: true
+  date_added: 2018-06-04
 
 Massachusetts:
   included: true
@@ -211,10 +204,10 @@ New Hampshire:
     - The data don't yet include returns for state legislative or local races.
 
 New Jersey:
-  included: false
-  date_added: 2018-05-10
+  included: true
+  date_added: 2018-06-04
   notes:
-    - There's extensive double-counting of returns from inconsistency across municipalities in use of total rows.
+    - Candidate names for lower office are not always consistent across counties.
 
 New Mexico:
   included: true
