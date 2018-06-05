@@ -149,10 +149,10 @@ class Expectations(object):
         """Print values, if there are to print."""
         if isinstance(values, np.ndarray) or isinstance(values, pd.Series):
             if values.size:
-                lines = '\n  '.join(sorted(list(values)))
+                lines = '\n  '.join([str(x) for x in sorted(list(values))])
                 print('\n{}:\n  {}'.format(description, lines))
         elif values:
-            lines = '\n  '.join(sorted(list(values)))
+            lines = '\n  '.join(sorted([str(x) for x in list(values)]))
             print('\n{}:\n  {}'.format(description, lines))
 
 
