@@ -47,6 +47,12 @@ variable_notes:
     note: Candidate names are standardized across jurisdictions.
 
 release_notes:
+  - date: 2018-06-12
+    note: >
+      The data now include state legislative returns from New Hampshire and
+      Idaho, and presidential write-in votes from new Hampshire.
+
+
   - date: 2018-06-05
     note: >
       This release brings coverage to all 50 states and DC, by adding

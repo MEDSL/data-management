@@ -42,7 +42,7 @@
         \item{\code{mode}}{Vote mode, e.g., \code{mail} or \code{Election Day}.}
         \item{\code{votes}}{Number of votes received.}}}
 \usage{local_precincts_2016}
-\source{https://dx.doi.org/10.7910/DVN/Q8OHRS, version 2018-06-05.}
+\source{https://dx.doi.org/10.7910/DVN/Q8OHRS, version 2018-06-15.}
 \description{
 This dataset contains precinct-level returns for elections to local office.
 

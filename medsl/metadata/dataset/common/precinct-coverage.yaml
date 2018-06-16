@@ -93,7 +93,7 @@ Idaho:
   included: true
   date_added: 2018-03-11
   notes:
-    - The data don't yet include elections to the Idaho House and Senate.
+    - Idaho House and Senate returns were added 2018-06-12.
 
 Illinois:
   included: true
@@ -123,6 +123,10 @@ Kansas:
 Kentucky:
   included: true
   date_added: 2018-04-23
+  notes:
+    - >
+      See GitHub issue \#2. There are ~20K too many votes for the major-party presidential candidates, likely the
+      result of doubly-counted ballots.
 
 Louisiana:
   included: true
@@ -200,8 +204,7 @@ New Hampshire:
   included: true
   date_added: 2018-05-10
   notes:
-    - The data don't yet include write-in votes for president.
-    - The data don't yet include returns for state legislative or local races.
+    - State legislative returns are post-recount, and added 2018-06-12.
 
 New Jersey:
   included: true
@@ -217,6 +220,9 @@ New York:
   included: true
   date_added: 2018-04-23
   notes:
+    - >
+      The data are not as clean in New York as elsewhere because of the need for county-by-county collection.
+      The returns over-count the major-party presidential vote by ~35K ballots (see GitHub issue \#2, h/t @wtadler).
     - Candidate names for lower office are not always consistent across counties.
 
 North Carolina:
