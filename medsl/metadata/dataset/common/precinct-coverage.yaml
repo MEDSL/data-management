@@ -52,8 +52,6 @@ Connecticut:
 Delaware:
   included: true
   date_added: 2018-05-09
-  notes:
-    - The data don't yet include write-in votes.
 
 District of Columbia:
   included: true
