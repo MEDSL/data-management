@@ -7,8 +7,6 @@ Alabama:
       Party` and `candidate` values of, for example, `Alabama Republican Party`.
       To calculate vote totals, sum the votes candidates' received on their
       own lines and from party-line voting.
-    - The data don't yet include write-in votes for president.
-    - No elections to the Alabama House or Senate were held in 2016.
 
 Alaska:
   included: true
