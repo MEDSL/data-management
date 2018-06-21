@@ -12,6 +12,7 @@ import pandas as pd
 import plac
 import yaml
 
+from medsl import PRECINCT_COLS
 from medsl.docs import write_frequencies
 from medsl.metadata import Metadata
 from medsl.paths import module_path, state_csv_path
@@ -99,6 +100,9 @@ class Expectations(object):
         unexpected_president = df.query('office == "US President" & district != "statewide"')['district'].unique()
         self.print_('Unexpected district for US President', unexpected_president)
         for office in self.district_numbers:
+            if office not in df.office.values:
+                # Don't check district validity for unobserved offices
+                continue
             n_seats = self.district_numbers[office][state_postal]
             observed = df.loc[df.office == office].drop_duplicates()
             if n_seats == 1:
@@ -272,7 +276,7 @@ def main(state_postal):
 
     The state precinct Makefile calls this function with output piped to `checks.txt` in a state data directory.
     """
-    df = pd.read_csv(state_csv_path(state_postal))
+    df = pd.read_csv(state_csv_path(state_postal), dtype=PRECINCT_COLS)
     expectations = Expectations()
     expectations.check(df, state_postal)
     print(Summary(df))
