@@ -178,6 +178,9 @@ Montana:
 Nebraska:
   included: true
   date_added: 2018-04-23
+  validation_datasets:
+    - url: http://www.sos.ne.gov/elec/2016/pdf/2016-canvass-book.pdf
+      accessed: 2018-06-27
   notes:
     - The data do not yet include returns for local office.
     - Nebraska Legislature returns appear with an `office` value of `State Senate`.
@@ -208,6 +211,25 @@ New Mexico:
 New York:
   included: true
   date_added: 2018-04-23
+  validation_datasets:
+    - office: US President
+      url: http://www.elections.ny.gov/NYSBOE/elections/2016/General/2016President.xls
+      accessed: 2018-06-27
+    - office: US House
+      url: http://www.elections.ny.gov/NYSBOE/elections/2016/General/2016Congress.xls
+      accessed: 2018-06-27
+    - office: US Senate
+      url: http://www.elections.ny.gov/NYSBOE/elections/2016/general/2016USSenator.xls
+      accessed: 2018-06-27
+    - office: State House
+      url: http://www.elections.ny.gov/NYSBOE/elections/2016/General/2016Assembly.xls
+      accessed: 2018-06-27
+    - office: State Senate
+      url: http://www.elections.ny.gov/NYSBOE/elections/2016/General/2016Senate.xls
+      accessed: 2018-06-27
+    - office: Supreme Court Justice
+      url: http://www.elections.ny.gov/NYSBOE/elections/2016/General/2016SupremeCourt.xls
+      accessed: 2018-06-27
   notes:
     - Candidate names for lower office are not always consistent across counties.
 
