@@ -1,4 +1,6 @@
 .idea
 __pycache__/
-medsl/.cache
-.cache
+*.cache
+congress-legislators
+openstates-legislators
+data
